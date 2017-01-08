@@ -36,8 +36,8 @@ var env = &Environment{
   root: "",
   symlink: os.Getenv("NVM_SYMLINK"),
   arch: os.Getenv("PROCESSOR_ARCHITECTURE"),
-  node_mirror: "",
-  npm_mirror: "",
+  node_mirror: os.Getenv("NODE_MIRROR"),
+  npm_mirror: os.Getenv("NPM_MIRROR"),
   proxy: "none",
   originalpath: "",
   originalversion: "",
@@ -102,6 +102,20 @@ func main() {
       } else {
         env.proxy = detail
         saveSettings()
+      }
+	case "node_mirror":
+      if detail == "" {
+      	fmt.Println("Current node_mirror: " + env.node_mirror)
+      } else {
+      	env.node_mirror = detail
+      	saveSettings()
+      }
+	case "npm_mirror":
+      if detail == "" {
+      	fmt.Println("Current npm_mirror: " + env.npm_mirror)
+      } else {
+      	env.npm_mirror = detail
+      	saveSettings()
       }
     case "update": update()
     default: help()
@@ -556,7 +570,7 @@ func updateRootDir(path string) {
 
 func saveSettings() {
   content := "root: "+strings.Trim(env.root," \n\r")+"\r\narch: "+strings.Trim(env.arch," \n\r")+"\r\nproxy: "+strings.Trim(env.proxy," \n\r")+"\r\noriginalpath: "+strings.Trim(env.originalpath," \n\r")+"\r\noriginalversion: "+strings.Trim(env.originalversion," \n\r")
-  content = content + "node_mirror: "+strings.Trim(env.node_mirror," \n\r")+ "npm_mirror: "+strings.Trim(env.npm_mirror," \n\r")
+  content = content + "\r\nnode_mirror: " + strings.Trim(env.node_mirror, " \n\r") + "\r\nnpm_mirror: " + strings.Trim(env.npm_mirror, " \n\r")
   ioutil.WriteFile(env.settings, []byte(content), 0644)
 }
 
